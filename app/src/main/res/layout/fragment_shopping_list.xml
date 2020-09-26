@@ -7,31 +7,32 @@
     tools:context=".ui.ShoppingListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvReminders"
+        android:id="@+id/rvProducts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_product"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/btn_add_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginStart="140dp"
+        android:layout_marginStart="136dp"
         android:layout_marginBottom="41dp"
         android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvReminders"
+        app:layout_constraintTop_toBottomOf="@+id/rvProducts"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
+        android:id="@+id/btn_del_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -40,7 +41,7 @@
         android:tint="@android:color/white"
         app:backgroundTint="#FF5722"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fab"
+        app:layout_constraintStart_toEndOf="@+id/btn_add_product"
         app:srcCompat="@android:drawable/ic_menu_delete" />
 
 

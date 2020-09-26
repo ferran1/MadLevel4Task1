@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Shopping List Kotlin</string>
-
+    <string name="add_product_dialog_title">Add a product to your list!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_product_name_hint">Add product</string>
+    <string name="add_product_amount_hint">Amount</string>
+    <string name="dialog_ok_btn">OK</string>
 </resources>
