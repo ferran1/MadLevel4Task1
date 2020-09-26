@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.madlevel4task1.R
@@ -54,8 +55,13 @@ class ShoppingListFragment : Fragment() {
     // Setup the view with the recyclerview
     private fun initViews() {
 
+        // click listeners for the two buttons
         btn_add_product.setOnClickListener {
             showAddProductdialog()
+        }
+
+        btn_del_product.setOnClickListener {
+            removeAllProducts()
         }
 
         viewManager = LinearLayoutManager(activity)
@@ -65,7 +71,9 @@ class ShoppingListFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-//        createItemTouchHelper().attachToRecyclerView(rvProducts)
+
+        // add the item touch helper to the recycler view
+        createItemTouchHelper().attachToRecyclerView(rvProducts)
 
         rvProducts.apply {
             setHasFixedSize(true)
@@ -73,6 +81,16 @@ class ShoppingListFragment : Fragment() {
             adapter = productAdapter
         }
 
+    }
+
+    // Removes all the buttons from the database when the delete button has been clicked
+    private fun removeAllProducts() {
+        mainScope.launch {
+            withContext(Dispatchers.IO) {
+                productRepository.deleteAllProducts()
+            }
+            getShoppingListFromDatabase()
+        }
     }
 
     // This method is called when the user clicks on the fab and it opens an Android AlertDialog
@@ -92,7 +110,7 @@ class ShoppingListFragment : Fragment() {
         builder.show()
     }
 
-
+    // "Updates" the products in the recycler view (called whenever an insertion or deletion of a product has been performed),
     private fun getShoppingListFromDatabase() {
         // Get the products from the database using the product repository and add them to the products array list
         mainScope.launch {
@@ -131,35 +149,35 @@ class ShoppingListFragment : Fragment() {
      * An ItemTouchHelper enables touch behavior (like swipe and move) on each ViewHolder,
      * and uses callbacks to signal when a user is performing these actions.
      */
-//    private fun createItemTouchHelper(): ItemTouchHelper {
-//
-//        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
-//        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
-//        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-//
-//            // Enables or Disables the ability to move items up and down.
-//            override fun onMove(
-//                recyclerView: RecyclerView,
-//                viewHolder: RecyclerView.ViewHolder,
-//                target: RecyclerView.ViewHolder
-//            ): Boolean {
-//                return false
-//            }
-//
-//            // Callback triggered when a user swiped an item.
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                val position = viewHolder.adapterPosition
-//                val productToDelete = shoppingList[position]
-//                mainScope.launch {
-//                    withContext(Dispatchers.IO) {
-//                        productRepository.deleteProduct(productToDelete)
-//                    }
-//                    getShoppingListFromDatabase()
-//                }
-//            }
-//        }
-//        return ItemTouchHelper(callback)
-//    }
+    private fun createItemTouchHelper(): ItemTouchHelper {
+
+        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
+        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
+        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            // Enables or Disables the ability to move items up and down.
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            // Callback triggered when a user swiped an item.
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val productToDelete = products[position]
+                mainScope.launch {
+                    withContext(Dispatchers.IO) {
+                        productRepository.deleteProduct(productToDelete)
+                    }
+                    getShoppingListFromDatabase()
+                }
+            }
+        }
+        return ItemTouchHelper(callback)
+    }
 
     // Validates if the input fields are blank or not
     private fun validateFields(txtName: EditText, txtAmount: EditText) : Boolean {
